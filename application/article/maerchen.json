@@ -1,0 +1,10 @@
+{
+	"db_tab":"article",
+	"action":{
+		"list":{},
+		"detail":{}
+	},
+	"mapping":{
+	
+	}
+}

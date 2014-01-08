@@ -1,0 +1,7 @@
+## Märchenkatalog ##
+Im Märchenkatalog werden Märchen nur  mit Autor und ggfs. Kurzbeschreibung gelistet, aber nicht gespeichert. Für jedes Märchen 
+gibt es einen Namen und die Möglichkeit, mehrere Verweise auf Webseiten zu hinterlegen, unter denen die Märchen zu finden sind. 
+Da es Märchen teilweise in unterschiedlichen Versionen gibt, kann für jeden Verweis ein Versionshinweise hinterlegt werden.
+
+Zusätzlich können für jedes Märchen verschiedene Attribute wie "Gutes Ende", "Prinzessin", "Tiere", "Sehr kurz" etc. hinterlegt werden, 
+anhand derer das Märchen beschrieben wird. Eine Suchfunktion ermöglicht es dann, gezielt nach Märchen eines bestimmten Typs zu suchen. 
