@@ -10,18 +10,14 @@ class Core{
     public static $BASE;
     public static $APP;
     public static $LIB;
-    public static $TPL;
     public static $TMP;
 	
 	// Datenbank
 	private static $DB	= array();
 
 
-
-
 	// -- AUSGABE -- 
 	private $view;
-	public static $SHOW;
 	
 	
 	
@@ -33,23 +29,10 @@ class Core{
 	// Allg. Meldungen
     private static $MSG	= array();
 	
-	// Zusatzinformation für Fehlermeldungen (z.B. welche Zeile einer Datei)
-	public static $ERROR_POINTER	= '';
-	
 	// Fehlermeldungen
 	private static $MSG_ERROR	= array();
 	
-	
-	
-	
-
-	
-	
-	// -- SICHERHEIT --
-	public static $TOKEN	= false;
-	
-	
-	
+		
 	
 	// ## KONSTRUKTOR ## -----------------------
 	private function __construct(){
@@ -57,9 +40,8 @@ class Core{
 		date_default_timezone_set('Europe/Berlin');
 		Core::$BASE	= $_SERVER['DOCUMENT_ROOT'].'api_v2/app/';
 
-		Core::$LIB	= Core::$BASE.'lib/tlib/';
-		Core::$APP	= Core::$BASE.'class/';
-		Core::$TPL	= Core::$BASE.'templates/';
+		Core::$LIB	= Core::$BASE.'libs/mframe/';
+		Core::$APP	= Core::$BASE.'application/';
 		Core::$TMP	= Core::$BASE.'tmp/';
 		
 		// Import (conf)
@@ -67,15 +49,11 @@ class Core{
 
         require_once Core::$LIB.'core/Item.php';
         require_once Core::$LIB.'core/Time.php';
-        require_once Core::$LIB.'core/Tracer.php';
         require_once Core::$LIB.'core/Validator.php';
 
-        require_once Core::$LIB.'io/User.php';
+        require_once Core::$LIB.'io/Request.php';
+        require_once Core::$LIB.'io/DbPdo.php';
         require_once Core::$LIB.'io/File.php';
-        require_once Core::$LIB.'io/DBset.php';
-        require_once Core::$LIB.'io/DBget.php';
-		
-        require_once Core::$APP.'log/Log.php';
 		
 		
 		// Header auf UTF-8 setzen
@@ -98,8 +76,10 @@ class Core{
 
 
 
-    /** --- # AKTION # ---- */
+    /** --- # ROUTING -> MODUL # ---- */
     public function route($route){
+    	$config	= "";
+		
 		
 		// Check: Globaler SicherheitsToken (global)
 		try{
@@ -184,7 +164,7 @@ class Core{
 			return View::$OUTPUT;
 		}else{
 			if(Core::$SHOW){
-				View::SHOW();				
+				View::SHOW();
 			}
 		}
 		
