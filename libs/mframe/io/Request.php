@@ -1,4 +1,5 @@
 <?
+/** Dateizugriff via CURL */
 class Request{
 	private $useragent	= null;
 	private $header		= array();

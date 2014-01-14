@@ -11,6 +11,7 @@ class Core{
     public static $APP;
     public static $LIB;
     public static $TMP;
+    public static $PUBLIC;
 	
 	// Datenbank
 	private static $DB	= array();
@@ -18,6 +19,7 @@ class Core{
 
 	// -- AUSGABE -- 
 	private $view;
+	private static $SHOW	= true;
 	
 	
 	
@@ -38,31 +40,33 @@ class Core{
 	private function __construct(){
 
 		date_default_timezone_set('Europe/Berlin');
-		Core::$BASE	= $_SERVER['DOCUMENT_ROOT'].'api_v2/app/';
-
+		Core::$BASE	= $_SERVER['DOCUMENT_ROOT'].'/maerchensternV3/';
+		
+		echo Core::$BASE;
+		
 		Core::$LIB	= Core::$BASE.'libs/mframe/';
 		Core::$APP	= Core::$BASE.'application/';
 		Core::$TMP	= Core::$BASE.'tmp/';
+		Core::$PUBLIC	= Core::$BASE.'public/';
 		
 		// Import (conf)
         require_once 'View.php';
-
         require_once Core::$LIB.'core/Item.php';
-        require_once Core::$LIB.'core/Time.php';
-        require_once Core::$LIB.'core/Validator.php';
-
-        require_once Core::$LIB.'io/Request.php';
-        require_once Core::$LIB.'io/DbPdo.php';
+        require_once Core::$LIB.'tools/Time.php';
+        
+        require_once Core::$LIB.'io/Input.php';
+        require_once Core::$LIB.'io/DbPdo.php'; 
         require_once Core::$LIB.'io/File.php';
+
+        
 		
 		
 		// Header auf UTF-8 setzen
 		View::SET_HEADER();
 
-		if(User::INPUT('debug','num')){
+		if(Input::GET('debug','num')){
 			Core::$DEBUG	= true;
 		}
-		
 		
 	}
 
@@ -77,36 +81,15 @@ class Core{
 
 
     /** --- # ROUTING -> MODUL # ---- */
-    public function route($route){
+    public function route(){
+    	$route	= array();
+    	if(func_num_args()>=1){
+    		$route	= func_get_arg(0);
+    	}
+    	
+    	
     	$config	= "";
-		
-		
-		// Check: Globaler SicherheitsToken (global)
-		try{
-			if(User::INPUT('token_global','text')){
-				$token	= User::INPUT('token_global','text');			
-				$salt	= 'hBnd75sjndkdmU';
-				$ts		= User::INPUT('ts','num');
-				$uid	= User::INPUT('uid','text');
-				$modul	= User::INPUT('m','text');
-				$task	= User::INPUT('task','text');
-				 
-				$valid	= md5($salt.$ts.$uid.$modul.$task);
-				if($token==$valid){
-					Core::$TOKEN = true;
-				}else{	// Token ungültig
-					if($route['intern']){
-						Core::$TOKEN = true;
-					}
-				}
-			}else{	// Kein Token übermittelt
-				if($route['intern']){
-					Core::$TOKEN = true;
-				}
-			}
-		}catch(Exception $e){
-			
-		}
+
 		
 		// Konfig einlesen
 		$config		= File::READ(Core::$APP.".conf","json");
@@ -120,8 +103,8 @@ class Core{
 		
 		// # (1) - Start: Routing # ------------  
         // - Gewähltes Modul erkennen
-		if(User::INPUT('m','text')){
-			$route['mod']   = User::INPUT('m','text');
+		if(Input::GET('m')){
+			$route['mod']   = Input::GET('m');
 		}
 		
 		// # (2) - Modul-Aufruf # ------------  
@@ -140,6 +123,7 @@ class Core{
 					Core::LOG('Zugriffsbeschränkung: Sie haben keine Berechtigung für dieses Modul!');
 				}
 			}
+			
 
 			// -- Dynamischer Controller-Aufruf --
 			if($access){
@@ -170,13 +154,17 @@ class Core{
 		
 		
 		// # (4) - Logfile ausgeben # ------------  
-		if(User::INPUT('trace','text')){
+		if(Input::GET('trace')){
 			View::OUTC(Core::$MSG,'arr','list');
 			print_r(Core::$MSG_ERROR);
 		}
 		
-    } // ENDE: route()
+    } // ENDE: route() --------------------------------------------------------------
 	
+				
+				
+				
+				
 
 	/** Verwaltung der Datenbank-Zugriffe
 	 * @param: args[0]: Nutzertyp (read, add, update, master) */
@@ -204,6 +192,9 @@ class Core{
 	public static function LOG($msg){
 		array_push(Core::$MSG,'# '.$msg);
 	}
+	
+	
+	
 	
 	
 	/** Logging von Fehlern
