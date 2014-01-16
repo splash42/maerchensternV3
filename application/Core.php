@@ -38,36 +38,23 @@ class Core{
 	
 	// ## KONSTRUKTOR ## -----------------------
 	private function __construct(){
-
+		// Timezone korrigieren
 		date_default_timezone_set('Europe/Berlin');
-		Core::$BASE	= $_SERVER['DOCUMENT_ROOT'].'/maerchensternV3/';
 		
-		echo Core::$BASE;
-		
+		// Pfade
+		Core::$BASE	= $_SERVER['DOCUMENT_ROOT'].'/maerchensternV3/';		
 		Core::$LIB	= Core::$BASE.'libs/mframe/';
 		Core::$APP	= Core::$BASE.'application/';
 		Core::$TMP	= Core::$BASE.'tmp/';
 		Core::$PUBLIC	= Core::$BASE.'public/';
 		
+		// Klassen-Importe
 		// Import (conf)
         require_once 'View.php';
-        require_once Core::$LIB.'core/Item.php';
-        require_once Core::$LIB.'tools/Time.php';
+        require_once Core::$LIB.'core/Loader.php';
         
-        require_once Core::$LIB.'io/Input.php';
-        require_once Core::$LIB.'io/DbPdo.php'; 
-        require_once Core::$LIB.'io/File.php';
-
-        
-		
-		
 		// Header auf UTF-8 setzen
 		View::SET_HEADER();
-
-		if(Input::GET('debug','num')){
-			Core::$DEBUG	= true;
-		}
-		
 	}
 
     public static function INIT(){
@@ -87,19 +74,16 @@ class Core{
     		$route	= func_get_arg(0);
     	}
     	
-    	
-    	$config	= "";
-
-		
-		// Konfig einlesen
+    	// Globale Konfig-Datei einlesen und verarbeiten
 		$config		= File::READ(Core::$APP.".conf","json");
+		
+		// Datenbank-Zugriffe
 		Core::$DB	= $config['db'];
 
+		// Struktur der Website
 		$structure	= File::READ(Core::$APP.".structure","json");
-
 		View::SET_TEMPLATES($structure['tpl']);
-		
-		
+		 
 		
 		// # (1) - Start: Routing # ------------  
         // - Gewähltes Modul erkennen
@@ -109,21 +93,11 @@ class Core{
 		
 		// # (2) - Modul-Aufruf # ------------  
 		// - Check: Modul existiert? (Konfiguration aus Datei ".structure")
+		$access	= true; // offen: Zugriffskontrolle
 		if(isset($structure['moduls'][$route['mod']]['modul'])){
-			Core::LOG('Info: Modul "'.$modul.'" gewählt.');	// <= LOG
 			
 			// .structure-Daten verkürzen
-			$modul	= $structure['moduls'][$route['mod']]['modul'];
-			
-			// Zugriffskontrolle
-			$access	= true;	// default
-			if(isset($structure['moduls'][$route['mod']]['token'])){
-				if($structure['moduls'][$route['mod']]['token']!=$route['token']){
-					$access	= false;
-					Core::LOG('Zugriffsbeschränkung: Sie haben keine Berechtigung für dieses Modul!');
-				}
-			}
-			
+			$modul	= $structure['moduls'][$route['mod']]['modul'];			
 
 			// -- Dynamischer Controller-Aufruf --
 			if($access){
@@ -136,10 +110,8 @@ class Core{
 	            $con    = new $class($modStructure);
 			}
 		}else{
-			Core::LOG('Fehler: Modul '.$route['mod'].' ist nicht bekannt!');
+			// LOG::SET_MSG('Fehler: Modul '.$route['mod'].' ist nicht bekannt!');
 		}
-		
-		
 		
 		
 		
@@ -150,21 +122,10 @@ class Core{
 			if(Core::$SHOW){
 				View::SHOW();
 			}
-		}
-		
-		
-		// # (4) - Logfile ausgeben # ------------  
-		if(Input::GET('trace')){
-			View::OUTC(Core::$MSG,'arr','list');
-			print_r(Core::$MSG_ERROR);
-		}
-		
+		}		
     } // ENDE: route() --------------------------------------------------------------
 	
-				
-				
-				
-				
+			
 
 	/** Verwaltung der Datenbank-Zugriffe
 	 * @param: args[0]: Nutzertyp (read, add, update, master) */
@@ -174,7 +135,7 @@ class Core{
 			$args	= func_get_args();
 			$user	= $args[0];
 		}else{
-			Core::LOG('DB-User: add');
+			LOG::SET_MSG('DB-User: add');
 		}
 		
 		$access	= array();
@@ -185,67 +146,6 @@ class Core{
 		$access['pass']		= Core::$DB['user'][$user]['pass'];
 		
 		return $access;
-	}
-	
-	
-	// LOGGING (Nachträglich Zzusammenfassend)
-	public static function LOG($msg){
-		array_push(Core::$MSG,'# '.$msg);
-	}
-	
-	
-	
-	
-	
-	/** Logging von Fehlern
-	 * @param: $msg - Fehlermeldung
-	 * @param: $arg[0] - Fehlerquelle (optional) */
-	public static function LOG_ERROR($msg){
-		$scope = "global";
-		if(func_num_args()>1){			
-			$scope = func_get_arg(1);
-		}
-		
-		if(Core::$ERROR_POINTER!=''){
-			$scope = Core::$ERROR_POINTER."_".$scope;
-		}
-		
-		array_push(Core::$MSG_ERROR,array("scope"=>$scope,"msg"=>$msg));
-	}
-	
-	/** Fehler-Status ermitteln */
-	public static function GET_STATUS(){
-		$status	= array();
-		$status['status']	= "ok";
-		
-		if(sizeof(Core::$MSG_ERROR)>0){
-			$status['status']	= "error";			
-			$status['data']		= Core::$MSG_ERROR;
-		}else{			
-			if(func_num_args()>0){
-				$status['data']		= func_get_arg(0);
-			}
-		}
-		
-		return $status;
-	}
-	
-	public static function HAS_ERROR(){
-		if(sizeof(Core::$MSG_ERROR)>0){
-			true;
-		}else{
-			false;
-		}
-	}
-	
-	/** Prüft, ob eine Fehlermeldung vorliegt */
-	public static function SEND_STATUS(){		
-		View::OUTC(Core::GET_STATUS(),"arr","json");
-	}
-	
-	// Ping (Sofort reagierend)
-	public static function PING($msg){
-		echo $msg."<br />";
 	}
 }
 ?>

@@ -149,10 +149,15 @@ class File{
 	
 	
 	/** Statisches Pendant zu load() */
-	public static function READ($url,$typ){
+	public static function READ($url){
+		$type	= "arr";
+		if(func_num_args()>1){
+			$type	= func_get_arg(1);
+		}
+		
 		// Zeiterfassung
         $out;		
-		switch($typ){
+		switch($type){
 			case "str":
 			case "json":
             	$out    = "";
@@ -175,7 +180,7 @@ class File{
                 // Dateizeile auslesen
                 $tmp = fgets($handle);
 				
-				switch($typ){
+				switch($type){
 					case "str": // Zusammenhängender Text
 					case "json": // JSON-Daten
 						$out    = $out.$tmp;
@@ -202,8 +207,8 @@ class File{
             return false;
         }
 		
-		if($typ=='json'){
-			$out	= json_decode($out);
+		if($type=='json'){
+			$out	= json_decode($out,true);        
 		}
 		
         return $out;
