@@ -12,21 +12,20 @@ class Log{
     // ## STATIC_FUNCTIONS ##
     /** Normale Log-Nachricht anlegen  */
     public static function SET_MSG($msg){
-    	echo "Log";
     	// Log-Objekt initialisieren
-    	if(!Log::$SINGLETON){ Log::INIT(); }
+    	$log	= Log::INIT();
     	
     	// Nachricht speichern
-    	array_push(Log::$SINGLETON->$msg,'# '.$msg);
+    	array_push($log->msg,'# '.$msg);
     }
     
     /** Fehlermeldung anlegen */
     public static function SET_ERROR($msg){
     	// Log-Objekt initialisieren
-    	if(!Log::$SINGLETON){ Log::INIT(); }
+    	$log	= Log::INIT();
     	
     	// Fehler speichern
-    	array_push(Log::$SINGLETON->$error,'# '.$msg);
+    	array_push($log->error,'# '.$msg);
     }
     // ------------------------------------------------
     
@@ -51,6 +50,28 @@ class Log{
     		true;
     	}else{
     		false;
+    	}
+    }
+    
+    /** Ausgabe für Log-Meldungen */
+    public static function SHOW(){
+    	$log	= Log::INIT();
+    	
+    	$type	= "error";
+    	if(func_num_args()>0){
+    		$type	= func_get_arg(0);
+    	}
+    	
+    	
+    	switch($type){
+    		case "msg":
+    			print_r($log->msg);
+    			break;
+    			
+    		case "error":
+    		default:
+    			print_r($log->error);
+    			
     	}
     }
 }

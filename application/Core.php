@@ -52,6 +52,7 @@ class Core{
 		// Import (conf)
         require_once 'View.php';
         require_once Core::$LIB.'core/Loader.php';
+        Loader::INIT_VARS();
         
 		// Header auf UTF-8 setzen
 		View::SET_HEADER();
@@ -75,13 +76,13 @@ class Core{
     	}
     	
     	// Globale Konfig-Datei einlesen und verarbeiten
-		$config		= File::READ(Core::$APP.".conf","json");
+		$config		= File::READ(Core::$APP.".config.json","json");
 		
 		// Datenbank-Zugriffe
 		Core::$DB	= $config['db'];
 
 		// Struktur der Website
-		$structure	= File::READ(Core::$APP.".structure","json");
+		$structure	= File::READ(Core::$APP.".structure.json","json");
 		View::SET_TEMPLATES($structure['tpl']);
 		 
 		
@@ -93,7 +94,7 @@ class Core{
 		
 		// # (2) - Modul-Aufruf # ------------  
 		// - Check: Modul existiert? (Konfiguration aus Datei ".structure")
-		$access	= true; // offen: Zugriffskontrolle
+		$access	= true; // (!todo) Zugriffskontrolle
 		if(isset($structure['moduls'][$route['mod']]['modul'])){
 			
 			// .structure-Daten verkürzen
@@ -110,19 +111,14 @@ class Core{
 	            $con    = new $class($modStructure);
 			}
 		}else{
-			// LOG::SET_MSG('Fehler: Modul '.$route['mod'].' ist nicht bekannt!');
+			Log::SET_ERROR('Fehler: Modul '.$route['mod'].' ist nicht bekannt!');
 		}
 		
 		
+		// Ausgabe
+		View::SHOW();
+		Log::SHOW();
 		
-		// # (3) - Seite ausgeben # ------------ 
-		if($route['intern']){
-			return View::$OUTPUT;
-		}else{
-			if(Core::$SHOW){
-				View::SHOW();
-			}
-		}		
     } // ENDE: route() --------------------------------------------------------------
 	
 			

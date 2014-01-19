@@ -1,0 +1,24 @@
+{
+	
+	"default":{
+		"modul":"home"
+	},
+	"home":{
+		"modul":"home"
+	},
+	"maerchen":{
+		"modul":"article"
+	},
+	"lexikon":{
+		"modul":"article"
+	},
+	"katalog":{
+		"modul":"catalog"
+	},
+	"nutzer":{
+		"modul":"user"
+	},
+	"suche":{
+		"modul":"search"
+	}
+}
