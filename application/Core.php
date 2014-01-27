@@ -62,6 +62,7 @@ class Core{
 		View::SET_HEADER();
 	}
 
+	// INIT: SINGLETON
     public static function INIT(){
         if(Core::$SINGLETON==null){
             Core::$SINGLETON = new Core();
@@ -74,9 +75,9 @@ class Core{
 
     /** --- # ROUTING -> MODUL # ---- */
     public function route(){
-    	$route	= array();
+    	$queue	= array();
     	if(func_num_args()>=1){
-    		$route	= func_get_arg(0);
+    		$queue	= func_get_arg(0);
     	}
     	
     	// Globale Konfig-Datei einlesen und verarbeiten
@@ -94,12 +95,12 @@ class Core{
 		// # (1) - Start: Routing # ------------  
         // - Gewähltes Modul erkennen
 		if(Input::GET('m')){
-			$route['mod']   = Input::GET('m');
+			$queue['mod']   = Input::GET('m');
 		}
 		
 		// Fallback: Default
-		if(!$route['mod']){
-			$route['mod'] = "default";
+		if(!$queue['mod']){
+			$queue['mod'] = "default";
 		}
 		
 		
@@ -107,20 +108,19 @@ class Core{
 		// # (2) - Modul-Aufruf # ------------  
 		// - Check: Modul existiert? (Konfiguration aus Datei ".structure")
 		$access	= true; // (!todo) Zugriffskontrolle		
-		if(isset(Core::$STRUCTURE[$route['mod']]['modul'])){
-			// Name des Moduls
-			$modul	= Core::$STRUCTURE[$route['mod']]['modul'];
+		if(isset(Core::$STRUCTURE[$queue['mod']]['modul'])){
+			// Basis Modul
+			$queue['mod_base']	= Core::$STRUCTURE[$queue['mod']]['modul'];
 
 			// -- Dynamischer Controller-Aufruf --
 			if($access){
-	            $class   = ucfirst($modul).'Controller';
-	            require_once Core::$APP.$modul.'/'.$class.'.php';
-				
+	            $class   = ucfirst($queue['mod_base']).'Controller';
+	            require_once Core::$APP.$queue['mod_base'].'/'.$class.'.php';
 	            $con    = new $class();
-	            $con->route($modul,$route['mod']);
+	            $con->route($queue);
 			}
 		}else{
-			Log::SET_ERROR('Fehler: Modul '.$route['mod'].' ist nicht bekannt!');
+			Log::SET_ERROR('Fehler: Modul '.$queue['mod'].' ist nicht bekannt!');
 		}
 		
 		// Ausgabe

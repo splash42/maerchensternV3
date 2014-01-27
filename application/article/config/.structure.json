@@ -1,22 +1,33 @@
 {
 	"maerchen":{
-		"detail":{
-			"function":"show",
-			"cache":{
-				"mode":"all",
-				"filter":[]
-			}
-		},
-		"default":"show"
+		"sequence":[
+			{"param":"t"},
+			{"param":"id","func":"detail"}
+		],
+		"tasks":{
+			"list":{
+				"function":"listItems",
+				"cache":{
+					"mode":"all",
+					"filter":{
+						"mode":"include",
+						"params":["m,t"]
+					}
+				}
+			},
+			"az":{},
+			"detail":{
+				"function":"show",
+				"cache":{
+					"mode":"all",
+					"filter":[]
+				}
+			},
+			"new":{},
+			"edit":{},
+			"default":"show"
+		}
 	},
 	"lexikon":{
-		"detail":{
-			"function":"show",
-			"cache":{
-				"mode":"all",
-				"filter":[]
-			}
-		},
-		"default":"show"
 	}
 }

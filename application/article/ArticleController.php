@@ -1,18 +1,17 @@
 <?php 
 class ArticleController extends Controller{
 	public function __construct(){
-		echo "# Modul: ArticleC<br>";
+		echo "# Modul: ArticleC<br>"; 
 	}
 	
 	/** Listet alle Items eines bestimmten 
 	 * Artikel-Typs (?m=) auf */
-	private function listItems(){
-		
+	protected function listItems($queue){
 	}
 	
 	/** Zeigt ein bestimmtes Item entweder anhand 
 	 * seiner ID (&id=) oder seines Filenames (&fn=) */
-	private function showItem(){
+	protected function showItem(){
 		
 	}
 	
@@ -25,25 +24,25 @@ class ArticleController extends Controller{
 	 * Zeigt das Editier-Formular für ein bestimmtes Item
 	 * - Passt sich an den Artikel-Typ an
 	 * - Unterscheidet zwischen neu (leer) und Update (befüllt) */
-	private function showForm(){
+	protected function showForm(){
 		
 	}
 	
 	/** Restricted!
 	 * Speichert ein Item  */
-	private function add(){
+	protected function add(){
 		
 	}
 	
 	/** Restricted!
 	 * Aktualisiert ein Item  */
-	private function update(){
+	protected function update(){
 		
 	}
 	
 	/** Restricted!
 	 * Löscht ein Item  */
-	private function delete(){
+	protected function delete(){
 		
 	}
 }
