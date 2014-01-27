@@ -20,103 +20,7 @@ class File{
     }
     // ------------------------------------
 
-    // ## WORKER ##
-    /** Kontaktiert den Server und gibt Daten als String-Array zurück */
-    public function load($url,$typ){
-		$tracer	= Tracer::INIT();
-		Core::LOG("File: Datei laden - ".$url);
-
-        // Zeiterfassung
-        $out;		
-		switch($typ){
-			case "str":
-			case "json":
-            	$out    = "";
-				break;
-			case "arr":
-			default:
-            	$out    = array();
-		}
-
-        // Datei wird geöffnet
-		$handle = @fopen($url, "r");
-		
-        // Daten werden zu Output-String formatiert
-        if($handle!=false){
-            $tmp    = " ";
-            $i      = 0;
-			
-            // Daten zeilenweise auslesen
-            while($tmp!=null){
-                // Dateizeile auslesen
-                $tmp = fgets($handle);
-				
-				switch($typ){
-					case "str": // Zusammenhängender Text
-					case "json": // JSON-Daten
-						$out    = $out.$tmp;
-						break;
-						
-					case "assarr": // Assoziatives Array
-						if($tmp!=""){ $out[trim($tmp)]	= 'true'; };
-						break;
-						
-					case "arr-skip": // Array ohne Leer-Einträge
-						if($tmp!=""){ $out[$i]	= trim($tmp); };
-						break;
-						
-					case "arr": // Array
-					default:
-                    	$out[$i]	= trim($tmp);
-				}
-                $i++;
-            }
-
-            // Datei wird geschlossen
-            fclose($handle);
-        }else{
-            return false;
-        }
-		
-		if($typ=='json'){
-			$out	= json_decode($out);
-		}		
-        return $out;
-    }   
     
-	
-	
-	
-    /** Kopiert eine Datei erst ins TMP-Verzeichnis, 
-     * bevor sie in den Speicher geladen wird */
-    public function loadCached($source,$fn){
-        $data    = array();
-        
-        // $success    = copy($source,Core::$TMP.$fn)
-        if(copy($source,Core::$TMP.$fn)){
-            array_push(Core::$MSG, "Kopiervorgang erfolgreich");
-            return $this->load(Core::$TMP.$fn, "");
-        }else{            
-            array_push(Core::$MSG, "Datei ".$fn." konnte nicht kopiert werden");
-        }
-        
-        return $data;
-    }
-    
-    /** Dateien vorausladen */
-    public function preload($source,$fn){
-        if(copy($source,Core::$TMP.$fn)){
-        	// Preloading erfolgreich
-            return Core::$TMP.$fn;
-        }else{
-        	// Preloading fehlgeschlagen
-        	return false;           
-        }	
-    } // -------------------------------
-    
-    
-    
-
     /* Verzeichnis-Inhalt auslesen */
     function getToc($url){
         $this->vz   = $url;
@@ -136,6 +40,12 @@ class File{
         return $toc;
     }
 	
+    
+    
+    
+    
+    // ------------------------------------
+    // STATICS
 	
 	/** Kopiert eine Datei von @param: $source nach @param $target */
 	public static function COPY($source,$target){		
@@ -204,6 +114,7 @@ class File{
             // Datei wird geschlossen
             fclose($handle);
         }else{
+        	Log::SET_ERROR('Fehler: Datei '.$url.' konnte nicht geöffnet werden!');
             return false;
         }
 		

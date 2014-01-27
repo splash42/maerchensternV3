@@ -1,0 +1,22 @@
+{
+	"maerchen":{
+		"detail":{
+			"function":"show",
+			"cache":{
+				"mode":"all",
+				"filter":[]
+			}
+		},
+		"default":"show"
+	},
+	"lexikon":{
+		"detail":{
+			"function":"show",
+			"cache":{
+				"mode":"all",
+				"filter":[]
+			}
+		},
+		"default":"show"
+	}
+}

@@ -1,0 +1,10 @@
+{
+	"show":{
+		"function":"show",
+		"cache":{
+			"mode":"all",
+			"filter":[]
+		}
+	},
+	"default":"show"
+}

@@ -6,6 +6,7 @@ class Core{
     public static $SINGLETON = null;
 
 	// -- KONFIG --
+    
 	// Basispfade
     public static $BASE;
     public static $APP;
@@ -15,6 +16,9 @@ class Core{
 	
 	// Datenbank
 	private static $DB	= array();
+	
+	// .structure.json	
+	public static $STRUCTURE;
 
 
 	// -- AUSGABE -- 
@@ -82,9 +86,10 @@ class Core{
 		Core::$DB	= $config['db'];
 
 		// Struktur der Website
-		$structure	= File::READ(Core::$APP.".structure.json","json");
+		Core::$STRUCTURE	= File::READ(Core::$APP.".structure.json","json");
 		View::SET_TEMPLATES($structure['tpl']);
-		 
+		
+		
 		
 		// # (1) - Start: Routing # ------------  
         // - Gewähltes Modul erkennen
@@ -92,35 +97,91 @@ class Core{
 			$route['mod']   = Input::GET('m');
 		}
 		
+		// Fallback: Default
+		if(!$route['mod']){
+			$route['mod'] = "default";
+		}
+		
+		
+		
 		// # (2) - Modul-Aufruf # ------------  
 		// - Check: Modul existiert? (Konfiguration aus Datei ".structure")
-		$access	= true; // (!todo) Zugriffskontrolle
-		if(isset($structure['moduls'][$route['mod']]['modul'])){
-			
-			// .structure-Daten verkürzen
-			$modul	= $structure['moduls'][$route['mod']]['modul'];			
+		$access	= true; // (!todo) Zugriffskontrolle		
+		if(isset(Core::$STRUCTURE[$route['mod']]['modul'])){
+			// Name des Moduls
+			$modul	= Core::$STRUCTURE[$route['mod']]['modul'];
 
 			// -- Dynamischer Controller-Aufruf --
 			if($access){
 	            $class   = ucfirst($modul).'Controller';
 	            require_once Core::$APP.$modul.'/'.$class.'.php';
 				
-				// Struktur-Daten des Moduls laden (noch inaktiv)
-				$modStructure = File::READ(Core::$APP.$modul."/.structure","json");
-				
-	            $con    = new $class($modStructure);
+	            $con    = new $class();
+	            $con->route($modul,$route['mod']);
 			}
 		}else{
 			Log::SET_ERROR('Fehler: Modul '.$route['mod'].' ist nicht bekannt!');
 		}
-		
 		
 		// Ausgabe
 		View::SHOW();
 		Log::SHOW();
 		
     } // ENDE: route() --------------------------------------------------------------
-	
+    
+    
+    /** Ähnl. route() für interne Aufrufe
+     * -> Läd ein Modul und führt eine Funktion aus 
+     *  @param: Modul(str) => Modul 
+     *  @param: args[1](str) => Task 
+     *  @param: args[2](array) => Zusätzliche Parameter	*/
+    public static function USE_FUNC($mod){
+    	// (1) - Parameter setzen
+    	$task	= null;
+    	$params	= null;
+    	
+    	// Optional: Task
+    	if(func_num_args()>1){
+    		$task	= func_get_arg(1);
+    	}
+    	
+    	// Optional: Parameter
+    	if(func_num_args()>2){
+    		$params	= func_get_arg(2);
+    	}
+    	
+    	
+    	// (2) - Routing
+    	// - Check: Modul existiert? (Konfiguration aus Datei ".structure")
+    	$access	= true; // (!todo) Zugriffskontrolle
+    	if(isset(Core::$STRUCTURE['moduls'][$mod]['modul'])){
+    			
+    		// .structure-Daten verkürzen (Info zu Modul $mod)
+    		$modul	= Core::$STRUCTURE['moduls'][$mod]['modul'];
+    	
+    		// -- Dynamischer Controller-Aufruf --
+    		if($access){
+    			
+    			$class   = ucfirst($modul).'Controller';
+    			require_once Core::$APP.$modul.'/'.$class.'.php';
+    			 
+    			// Modul-Controller laden
+    			$con    = new $class();
+    			if($task){
+    				if($params){
+    					$con->route($modul,$task,$params);
+    				}else{
+    					$con->route($modul,$task);
+    				}
+    			}else{
+    				$con->route($modul);
+    			}
+    		}
+    	}else{
+    		Log::SET_ERROR('Fehler: Modul '.$route['mod'].' ist nicht bekannt!');
+    	}
+    	
+    }
 			
 
 	/** Verwaltung der Datenbank-Zugriffe
