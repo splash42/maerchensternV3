@@ -1,69 +1,51 @@
 <?
-/** Dateizugriff via CURL */
 class Request{
-	private $useragent	= null;
-	private $header		= array();
-	
-	private $auth	= false;
-	private $user	= '';
-	private $pass	= '';
-	
-	
-	// ## KONSTRUKTOR ##
-	public function __construct(){}
-	
-	/** Sendet einen POST-Request 
-	 * @param: $url -> Request-URL
-	 * @param: $func(1) -> assArr mit zu übertragenden Daten */
-	public function post($url){
-		// (1) - Zusatzparameter auslesen
-		// Mit dem POST-Request zu versendende Datem
-		$data	= null;
-		if(func_num_args()>1){
-			$data 	= func_get_arg(1);
-		}
-		
-		// cURL-Aufruf
-		$req 	= curl_init();
-		
-		// Parameter
-		curl_setopt($req, CURLOPT_VERBOSE, 1);
-		curl_setopt($req, CURLOPT_URL, $url);
-		curl_setopt($req, CURLOPT_POST, TRUE);
-		if($data){
-			curl_setopt($req, CURLOPT_POSTFIELDS, $data);
-		}
-		if($this->auth){
-			curl_setopt($req, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-			curl_setopt($req, CURLOPT_USERPWD, $this->user.":".$this->pass);
-		}
-		
-		if(sizeof($this->header)>0){
-			curl_setopt($req, CURLOPT_HTTPHEADER, $this->header);			
-		}
-		curl_setopt($req, CURLOPT_RETURNTRANSFER, 1);
-		
-		// Request
-		$res	= curl_exec($req);
-		
-		// Rückgabe Ergebnis
-		return $res;
-	}
+    static $SINGLETON = null;
 
-	/** Setzt einen User-Agent für alle Requests */
-	public function setUserAgent($ua){
-		$this->useragent	= $ua;	
-	}
-	
-	public function addHeader($type,$content){
-		array_push($this->header, $type.": ".$content);
-	}
-	
-	/** Setzt die Login-Daten für ein Auth-Zugriff */
-	public function setAuth($user,$pass){
-		$this->auth	= true;
-		$this->user = $user;
-		$this->pass = $pass;
-	}
+    var $GET;
+    var $POST;
+
+    // ## KONSTRUKTOR ## ------------------------------------------------------------
+    private function __construct(){
+        // echo "new User()";
+        $this->GET  = $_GET;
+        $this->POST = $_POST;
+    }    
+    
+    // Gibt die Klasse zurück, wenn sie schon initialisiert worden ist.
+    public static function INIT(){
+	// echo "init<br>";
+        if(Request::$SINGLETON==null){
+            Request::$SINGLETON = new Request();
+        }
+        return Request::$SINGLETON;
+    } // ENDE: Konstruktor ----------------------------------------------------------
+
+    
+    
+
+	/** Gibt einen Wert nach einer Typen-Prüfung zurück */
+	public static function GET($param){	
+		// Validierungstyp festlegen
+		$type	= "text";
+		if(func_num_args()>=1){
+			$type	= func_get_arg(0);
+		}
+		
+		// Werte auslesen
+		$val	= false;
+        if(isset($_GET[$param])){		// GET-Request
+        	$val	= $_GET[$param];
+        }else{
+            if(isset($_POST[$param])){	// POST-Request
+            	$val	= $_POST[$param];
+            }
+        }
+		
+		// Typen-Erkennung (!todo)
+		$val	= $val;
+		
+		return $val;
+	} // ENDE: GET
 }
 ?>

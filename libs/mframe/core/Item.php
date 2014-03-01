@@ -4,19 +4,24 @@ class Item{
 	protected $store_engine	= "pdo";
 	
 	// Alle Persistenten Variablen
-	public $p_vars	= array();
+	public $attr	= array();
 	
 	// Key der Datenbank-Tabelle
 	protected $key	= "id";
 	
 	// Speichertabelle
-	protected $tab	= '';
+	protected static $TAB;
 	
 	
 	/** INSERT/UPDATE: Speichert das Objekt. Falls das Objekt noch nicht existiert, 
 	 * wird es neu angelegt, ansonsten aktualisiert */
 	public function store(){
-		
+		$db	= DBpdo::INIT();
+		$con	= $db->open();
+	}
+	
+	public function setDbData($dbdata){
+		$this->attr	= $dbdata;		
 	}
 	
 	/** INSERT: Fügt ein Item in der Datenbank ein, sofern es noch nicht 

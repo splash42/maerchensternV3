@@ -19,8 +19,8 @@ class Loader{
 		// Lib:IO
 		Loader::$PATHS['File']		= array("type"=>"lib","path"=>"io/");
 		Loader::$PATHS['Request']	= array("type"=>"lib","path"=>"io/");
-		Loader::$PATHS['DbPdo']		= array("type"=>"lib","path"=>"io/");
-		Loader::$PATHS['Input']		= array("type"=>"lib","path"=>"io/");
+		Loader::$PATHS['DBpdo']		= array("type"=>"lib","path"=>"io/");
+		Loader::$PATHS['Url']		= array("type"=>"lib","path"=>"io/");
 		
 		// Lib::Tools
 		Loader::$PATHS['Time']	= array("type"=>"lib","path"=>"tools/");
@@ -35,6 +35,10 @@ class Loader{
 			switch(Loader::$PATHS[$cn]['type']){
 				case "lib": // Library-Klasse
 					$file	= Core::$LIB.Loader::$PATHS[$cn]["path"].$cn.".php";
+					break;
+					
+				case "app": // Library-Klasse
+					$file	= Core::$APP.Loader::$PATHS[$cn]["path"].$cn.".php";
 					break;
 			
 				case "root": // Zugriff von Root
@@ -55,6 +59,28 @@ class Loader{
 	 * @param: $path => Pfad, wo die Klasse zu finden ist */
 	public static function REGISTER($cn,$path,$type){
 		Loader::$PATHS[$cn]	= $path;
+	}
+	
+	
+	/** Registriert eine Liste von Klassen, entweder in
+	 * Form einer assoc oder als JSON-Array */
+	public static function REGISTER_LIST($list){
+		$type	= "assoc";
+		if(func_num_args()>1){
+			$type	= func_get_arg(1);
+		}
+		
+		if($type=='json'){
+			$list	= json_decode($list,true);
+		}
+		
+		/** Klassenpfade anlegen */
+		foreach ($list AS $cn => $path){
+			$c = array();
+			$c['type']	= $path[0];
+			$c['path']	= $path[1];
+			Loader::$PATHS[$cn]	= $c;
+		}
 	}
 }
 ?> 

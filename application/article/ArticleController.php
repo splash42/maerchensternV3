@@ -1,18 +1,35 @@
 <?php 
 class ArticleController extends Controller{
-	public function __construct(){
-		echo "# Modul: ArticleC<br>"; 
-	}
+	public function __construct(){}
+	
+	
 	
 	/** Listet alle Items eines bestimmten 
 	 * Artikel-Typs (?m=) auf */
 	protected function listItems($queue){
+		
+		// Datensätze laden	
+		$items	= ArticleItem::LOAD($queue['mod']);
+		
+		echo "items: ";
+		print_r($items);
+	}
+	
+	/** Listet alle Items eines bestimmten
+	 * Artikel-Typs (?m=) in einer A-Z-Liste auf */
+	protected function azItems($queue){
+	
+		// Datensätze laden
+		$items	= ArticleItem::LOAD($queue['mod']);
+	
+		echo "items: ";
+		print_r($items);
 	}
 	
 	/** Zeigt ein bestimmtes Item entweder anhand 
-	 * seiner ID (&id=) oder seines Filenames (&fn=) */
+	 * seiner ID (&id=) oder seines Filenames (&name=) */
 	protected function showItem(){
-		
+		$item	= new ArticleItem(Request::GET("name"),"name");
 	}
 	
 	

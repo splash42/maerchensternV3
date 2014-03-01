@@ -7,6 +7,10 @@
 		"tasks":{
 			"list":{
 				"function":"listItems",
+				"classes":{
+					"ArticleItem":["app","article/"]
+				},				
+				"config":"maerchen.list.json",
 				"cache":{
 					"mode":"all",
 					"filter":{
@@ -15,7 +19,19 @@
 					}
 				}
 			},
-			"az":{},
+			"az":{
+				"function":"azItems",
+				"classes":{
+					"ArticleItem":["app","article/"]
+				},
+				"cache":{
+					"mode":"all",
+					"filter":{
+						"mode":"include",
+						"params":["m,t"]
+					}
+				}
+			},
 			"detail":{
 				"function":"show",
 				"cache":{

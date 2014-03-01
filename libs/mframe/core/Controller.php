@@ -19,13 +19,17 @@ abstract class Controller{
 			if($structure['sequence']){
 				$task	= $this->chkSequence($structure['sequence']);
 			}else{
-				$task	= Input::GET('t');
+				$task	= Request::GET('t');
 			}
 			
-			$func	= $structure['tasks'][$task]['function'];
+			// 2.2 Klassen registrieren
+			Loader::REGISTER_LIST($structure['tasks'][$task]['classes']);
 			
-			// 2.1 - Call Function
-			$this->{"listItems"}($queue);
+			
+			// 2.3 - Call Function (Dyn. Aktion aufrufen)
+			$func	= $structure['tasks'][$task]['function'];
+			$this->{$func}($queue);
+			
 			
 		}else{ Log::SET_ERROR('Fehler: Struktur für Modul '.$modul.' konnte nicht geöffnet werden!'); }
 		
@@ -41,12 +45,12 @@ abstract class Controller{
 		
 		for($i=0;$i<$num;$i++){
 			
-			if($seq[$i]['param']=='t'&&Input::GET('t')){	// Auf Task-Parameter prüfen
-				return Input::GET('t');
+			if($seq[$i]['param']=='t'&&Request::GET('t')){	// Auf Task-Parameter prüfen
+				return Request::GET('t');
 			}else{				// Alternative Parameter prüfen
 				
 				// Alternativer Parameter ist gesetzt
-				if(Input::GET($seq[$i]['param'])){
+				if(Request::GET($seq[$i]['param'])){
 					return ($seq[$i]['func']);
 				}
 			}

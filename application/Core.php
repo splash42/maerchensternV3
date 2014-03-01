@@ -94,8 +94,8 @@ class Core{
 		
 		// # (1) - Start: Routing # ------------  
         // - Gewähltes Modul erkennen
-		if(Input::GET('m')){
-			$queue['mod']   = Input::GET('m');
+		if(Request::GET('m')){
+			$queue['mod']   = Request::GET('m');
 		}
 		
 		// Fallback: Default
@@ -187,20 +187,20 @@ class Core{
 	/** Verwaltung der Datenbank-Zugriffe
 	 * @param: args[0]: Nutzertyp (read, add, update, master) */
 	public static function GET_DB_ACCESS(){
-		$user	= 'add';
+		$user	= 'master';
 		if(func_num_args()>0){
 			$args	= func_get_args();
 			$user	= $args[0];
 		}else{
-			LOG::SET_MSG('DB-User: add');
+			LOG::SET_MSG('DB-User: master');
 		}
 		
 		$access	= array();
 		
 		$access['host']		= Core::$DB['host'];
-		$access['dbname']	= Core::$DB['db_name'];
-		$access['user']		= Core::$DB['user'][$user]['name'];
-		$access['pass']		= Core::$DB['user'][$user]['pass'];
+		$access['dbname']	= Core::$DB['name'];
+		$access['user']		= Core::$DB[$user]['user'];
+		$access['pass']		= Core::$DB[$user]['pass'];
 		
 		return $access;
 	}
