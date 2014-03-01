@@ -1,7 +1,7 @@
 <?
 /** DB-Zugriff mit PDO */
 class DBpdo{
-    private static $SINGLETON;
+    private static $SINGLETON	= null;
 
 	// Zugangsdaten
     private $user;
@@ -20,6 +20,7 @@ class DBpdo{
 
     // ## KONSTRUKTOR ##
     public function __construct($user){
+    	
     	$db = Core::GET_DB_ACCESS($user);
 		
 		$this->host	    = $db['host'];
@@ -40,13 +41,11 @@ class DBpdo{
         return DBpdo::$SINGLETON;
     }
 	
-	
-	
-	
 	// ## --- Verbindungen --- ##	
 	/** Erstellt eine Verbindung */
-	private function open(){
-		$this->connection		= new PDO('mysql:host='.$this->host.';dbname='.$this->dbname.';',$this->user,$this->pass);
+	public function open(){
+		$this->connection	= new PDO('mysql:host='.$this->host.';dbname='.$this->dbname,$this->user,$this->pass);
+		return $this->connection;
 	}
 	
 	/** Führt eine Abfrage auf die DB durch */

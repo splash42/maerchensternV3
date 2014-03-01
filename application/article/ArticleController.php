@@ -10,9 +10,6 @@ class ArticleController extends Controller{
 		
 		// Datensätze laden	
 		$items	= ArticleItem::LOAD($queue['mod']);
-		
-		echo "items: ";
-		print_r($items);
 	}
 	
 	/** Listet alle Items eines bestimmten
