@@ -1,6 +1,7 @@
 Satisfy Any
 Order Deny,Allow
-Allow from all 
+Allow from all
+
 mod_gzip_on Yes
 
 <IfModule mod_deflate.c>
@@ -10,3 +11,9 @@ mod_gzip_on Yes
     AddOutputFilterByType DEFLATE application/rss+xml
     AddOutputFilterByType DEFLATE application/javascript application/x-javascript
 </IfModule>
+
+AddCharset UTF-8 .css
+AddCharset UTF-8 .js
+AddCharset UTF-8 .php
+AddCharset UTF-8 .htm
+AddCharset UTF-8 .html

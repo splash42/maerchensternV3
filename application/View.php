@@ -1,9 +1,10 @@
 <?
 class View{
 	// Template-Puffer
-	private static $PUFFER	= array();
-	// Ausgabe-String
-	public static $OUTPUT	= '';
+	private static $TPL		= array();
+	
+	// Ausgabe-Puffer
+	private static $BUFFER	= array();
 	
 	private static $MIME		= 'text/html';
 	private static $ENC			= 'utf-8';
@@ -37,8 +38,6 @@ class View{
 				View::$MIME	= func_get_arg(0);
 				break;				
 		}
-		
-		
 		header("Content-Type: ".View::$MIME."; charset=".View::$ENC);
 	}
 	
@@ -46,9 +45,9 @@ class View{
 	/** Ausgabefunktion für den $OUTPUT-Puffer */
 	public static function SHOW(){
 		if(View::$ENC!=View::$BASE_ENC){
-			echo iconv(View::$BASE_ENC,View::$ENC."//TRANSLIT",View::$OUTPUT);
+			echo iconv(View::$BASE_ENC,View::$ENC."//TRANSLIT",View::$BUFFER['root']);
 		}else{
-			echo View::$OUTPUT;
+			echo View::$BUFFER['root'];
 		}
 	}
 	
@@ -136,68 +135,39 @@ class View{
 		echo $txt;
 	}
 	
-	
-	
-	
-	/** Ausgabe des View-Speichers als print_r */
-	public static function OUTP($msg){
-		print_r($msg);
-	}
-	
-	/** Setzt ein Basis-Template
-	 * @param: $url: Url inkl. mit Pfad ab TPL-Root */
-	public static function LOAD_TEMPLATE($url){
-		View::$OUTPUT	= File::READ(Core::$TPL.$url,'str');
-	}
-	
-	
-	/** Array mit Template-Informationen verarbeiten
-	 * @param: $tplList(arr) - Liste mit URLs (inkl. Pfad ab TPL-Root) */
-	public static function SET_TEMPLATES($tplList){
-
-		foreach ($tplList as $tpl) {
-			if($tpl['parent']=='root'){
-				View::$OUTPUT	= File::READ(Core::$TPL.$tpl['url'],'str');
+	/** Templates aus Konfigurations-Datei laden */
+	public static function LOAD_TEMPLATES($mod,$config){
+		foreach ($config as $key => $value) {
+			// URI für TPL ermitteln
+			$fn	= "";			
+			if(isset($value['mod'])){
+				$fn	= Core::$APP.$value['mod']."/tpl/";
 			}else{
-				$size	= sizeof(View::$PUFFER[$tpl['parent']]);
-				if($size>0){
-					if($tpl['type']=="add"){
-						View::$PUFFER[$tpl['parent']][$tpl['tag']][$size+1]['id']	= $tpl['id'];
-						View::$PUFFER[$tpl['parent']][$tpl['tag']][$size+1]['code']	= File::READ(Core::$TPL.$tpl['url'],'str');
-					}else{
-						View::$PUFFER[$tpl['parent']][$tpl['tag']]					= null;
-						View::$PUFFER[$tpl['parent']][$tpl['tag']][0]['id']			= $tpl['id'];
-						View::$PUFFER[$tpl['parent']][$tpl['tag']][0]['code']		= File::READ(Core::$TPL.$tpl['url'],'str');
-					}					
-				}else{
-					View::$PUFFER[$tpl['parent']][$tpl['tag']][0]['id']		= $tpl['id'];
-					View::$PUFFER[$tpl['parent']][$tpl['tag']][0]['code']	= File::READ(Core::$TPL.$tpl['url'],'str');
-				}				
+				$fn	= Core::$APP.$mod."/tpl/";
 			}
-		}
-		
-		
-		View::PROCESS();
+			$fn	.= $value['file'];
+			
+			// Laden und in TPL-Puffer speichern
+			View::$TPL[$key]	= File::READ($fn,"str");
+		}		
 	}
 	
-	/** Verarbeitet die im Puffer befindlichen statischen Templates */
-	private static function PROCESS(){
-		// Kombinieren
-		
-		// Zusammensetzen
-		
-		
-		// Debug
-	}
+	/** Füllt einen Puffer-Slot mit einem Template */
+	public static function SET_TPL($slot,$tpl){
+		View::$BUFFER[$slot]	= View::$TPL[$tpl];
+	}	
 	
-	public static function SET_TAG($tag,$value){
-		$s	= '/##'.$tag.'##/i';
-		$r	= $value;
-		
-		View::$OUTPUT	= preg_replace($s, $r, View::$OUTPUT);
-	}
+	/** Fügt dem Puffer-Slot ein Template hinzu */
+	public static function ADD_TPL($slot,$tpl,$tag){
+		$s	= '/##'.$tag.'##/i';		
+		View::$BUFFER[$slot] = preg_replace($s,View::$TPL[$tpl],View::$BUFFER[$slot]);
+	}	
 	
-	
+	/** Ersetzt in einem Slot einen TAG durch einen Wert */
+	public static function ADD_TAG($slot,$tag,$value){
+		$s	= '/##'.$tag.'##/i';		
+		View::$BUFFER[$slot] = preg_replace($s,$value,View::$BUFFER[$slot]);
+	}	
 	
 	/** Ersetzt evt. TAGs in den Dateinamen  */
 	private static function FORMAT_FILENAME(){
@@ -213,6 +183,5 @@ class View{
 		$r	= $time->getDatum('JJJJMMTT');	
 		View::$FILENAME = str_replace($s, $r, View::$FILENAME);
 	}
-	
 }
 ?>

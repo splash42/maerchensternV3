@@ -1,0 +1,28 @@
+{
+	"load":{
+		"items":{
+			"user":"read",
+			"type":"list",
+			"tab":"ms3_article",
+			"fields":"id,filename,title",
+			"limit":15
+		}
+	},
+	"tpl":{
+		"root":{"mod":"_frame","file":"basic.tpl.htm"},
+		"list":{"mod":"_frame","file":"content.list.tpl.htm"},
+		"listitem":{"mod":"_frame","file":"content.list.item.tpl.htm"}
+	},
+	"statics":{
+		"basic":{
+			"TITLE":"Willkommen auf dem Märchenstern"
+		}
+	},
+	"structure":[
+		{"slot":"root","type":"tpl","action":"set","ref":"root"},
+		{"slot":"root","type":"static","ref":"basic"},
+		{"slot":"root","type":"tpl","action":"add","ref":"list","target":"MAIN"},
+		{"slot":"items","type":"tpl","action":"append","ref":"listitem","data":"items"},
+		{"slot":"root","type":"slot","action":"add","ref":"items","target":"CONTENT"}	
+	]
+}

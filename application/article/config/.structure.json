@@ -41,7 +41,7 @@
 			},
 			"new":{},
 			"edit":{},
-			"default":"show"
+			"default":"list"
 		}
 	},
 	"lexikon":{

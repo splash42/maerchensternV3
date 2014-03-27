@@ -6,7 +6,7 @@
 		<meta name="verify-v1" content="A205upqnYM8e3jWVH7h1uKMlmymsYwIXvXOJ4pyHr3w=" />
 		<meta property="og:image" content="http://www.maerchenstern.de/img_layout/madel.png"/>
 		
-		<title>##TITLE##</title>
+		<title>Märchenstern Template - Startseite</title>
 		
 		<link href='//assets.maerchenstern.de/css/base.css' rel='stylesheet' type='text/css' media='screen' />
 		
@@ -40,7 +40,46 @@
 			</header>
 			
 			<!-- Content -->
-			##MAIN##
+			<section id="main">
+				
+				<section id="content">
+					<h1>Aktuelle Einträge</h1>
+					<article>
+						<h2>Märchenmarathon vom 30.5.2014</h2>
+						<p>
+							Ganz viele Märchen vertont von WDR5.
+						</p>
+						<a href="#">mehr lesen</a>
+					</article>
+					<article>
+						<h2>Märchenmarathon vom 30.5.2014</h2>
+						<p>
+							Ganz viele Märchen vertont von WDR5.
+						</p>
+						<a href="#">mehr lesen</a>
+					</article>
+					<article>
+						<h2>Märchenmarathon vom 30.5.2014</h2>
+						<p>
+							Ganz viele Märchen vertont von WDR5.
+						</p>
+						<a href="#">mehr lesen</a>
+					</article>
+				</section>
+				
+				
+				<aside>
+					<div>
+						<h2>Meist gelesene Märchen</h2>
+						<ul>
+							<li>Rumpelstilzchen</li>
+							<li>Rumpelstilzchen</li>
+							<li>Rumpelstilzchen</li>
+						</ul>					
+					</div>
+				</aside>
+				<br style="clear: both;" />
+			</section>
 			
 			<!-- Footer -->
 			<footer></footer>

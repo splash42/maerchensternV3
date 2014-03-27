@@ -1,0 +1,94 @@
+/** Basis-Layout für maerchenstern.de v3.0 */
+header, nav{
+	display: block;
+}
+body{
+	margin: 0;
+	padding: 0;
+	background-color: #202022;
+}
+div{
+	position: relative;
+}
+nav{
+	color: #FFFFBB;
+}
+nav a{
+	color: #FFFFBB;
+	text-decoration: none;
+}
+
+#nav_meta{
+	text-align: right;
+	margin-top: -28px;
+	margin-right: 15px;	
+}
+#frame{
+	width: 900px;
+	margin-top: 30px;
+	margin-left: auto;
+	margin-right: auto;
+	background-color: #39393e;
+	
+	border: 1px solid white;
+	-moz-border-radius: 20px;
+	-webkit-border-radius: 20px;
+	border-radius: 20px;
+}
+
+/** Header */
+header{
+}
+	
+#logo_img{
+	margin-top: 2px;
+}
+#logo_text{
+	position: absolute;
+	right: 20px;
+	top: 20px;
+}
+
+header nav{
+	padding-left: 195px;
+	font-size: 17px;
+	padding-bottom: 5px;
+}
+
+
+/** Inhalt */
+#content{	
+	width: 560px;
+	margin-left: 5px;
+	padding: 25px 20px 20px;
+	background-color: #E3DFAF;
+	color: #392900;
+	float: left;	
+	box-shadow: 5px 5px 5px #000000;
+}
+#content h1,#content h2,#content h3{
+	font-family: Georgia,Times,serif;
+}
+article{
+	padding-bottom: 10px;
+	border-bottom: 1px dashed #392900;
+}
+
+/** Rechte Info-Spalte */
+aside{
+	float: right;
+	width: 275px;
+}
+aside h2{
+	margin: 0px;
+}
+aside ul, aside li{
+	display: block;
+	padding: 0px;
+	margin: 0px;
+}
+
+footer{
+	clear: both;
+	height: 50px;
+}

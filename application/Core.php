@@ -4,8 +4,6 @@ class Core{
 	
 	// SINGLETON
     public static $SINGLETON = null;
-
-	// -- KONFIG --
     
 	// Basispfade
     public static $BASE;
@@ -88,9 +86,6 @@ class Core{
 
 		// Struktur der Website
 		Core::$STRUCTURE	= File::READ(Core::$APP.".structure.json","json");
-		View::SET_TEMPLATES($structure['tpl']);
-		
-		
 		
 		// # (1) - Start: Routing # ------------  
         // - Gewähltes Modul erkennen
@@ -102,8 +97,6 @@ class Core{
 		if(!$queue['mod']){
 			$queue['mod'] = "default";
 		}
-		
-		
 		
 		// # (2) - Modul-Aufruf # ------------  
 		// - Check: Modul existiert? (Konfiguration aus Datei ".structure")
@@ -124,7 +117,6 @@ class Core{
 		}
 		
 		// Ausgabe
-		View::SHOW();
 		Log::SHOW();
 		
     } // ENDE: route() --------------------------------------------------------------

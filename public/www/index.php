@@ -8,6 +8,7 @@ function __autoload($cn){
 } // ENDE: Autoloader --------
 
 $c	= Core::INIT();
+echo "ping";
 $c->route();
 
 echo "<br>done";

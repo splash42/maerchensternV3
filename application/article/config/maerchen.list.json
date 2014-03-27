@@ -6,17 +6,16 @@
 		}
 	},
 	"mapping":{
-			"root":{
-				"TITLE":{"type":"fix","txt":"Märchen von A-Z online lesen"},
-				"META_DESC":{"type":"fix","txt":"Freie Sammlung von Märchen, Sagen & Legenden. Ein Märchenstern für Groß und Klein!"}
-			},
-			"item":{			
-				"TITLE":{"type":"db","field":"title"},		
-				"DESC":{"type":"db","field":"desc"},
-				"AUTHOR":{"type":"db_json","field":"addition","path":["autor"]},
-				"URL":{"type":"db","field":"filename"}
-			}
+		"root":{
+			"TITLE":{"type":"fix","txt":"Märchen von A-Z online lesen"},
+			"META_DESC":{"type":"fix","txt":"Freie Sammlung von Märchen, Sagen & Legenden. Ein Märchenstern für Groß und Klein!"}
 		},
+		"item":{			
+			"TITLE":{"type":"db","field":"title"},		
+			"DESC":{"type":"db","field":"desc"},
+			"AUTHOR":{"type":"db_json","field":"addition","path":["autor"]},
+			"URL":{"type":"db","field":"filename"}
+		}
 	},
 	"tpl":{
 		"root":{"mod":"_frame","file":"basic.tpl.htm"},

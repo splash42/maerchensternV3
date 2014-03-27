@@ -1,10 +1,14 @@
 {
-	"show":{
-		"function":"show",
-		"cache":{
-			"mode":"all",
-			"filter":[]
+	"default":"home",
+	"home":{
+		"tasks":{
+			"list":{
+				"function":"listHome",
+				"classes":{
+					"HomeItem":["app","home/"]
+				}
+			},
+			"default":"list"
 		}
-	},
-	"default":"show"
+	}
 }

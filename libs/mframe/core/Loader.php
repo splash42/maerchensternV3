@@ -11,6 +11,9 @@ class Loader{
 	/** Initialisieren des Loaders */
 	public static function INIT_VARS(){
 		// Lib:Core
+		Loader::$PATHS['View']	= array("type"=>"root","path"=>"/");
+		
+		// Lib:Core
 		Loader::$PATHS['Log']	= array("type"=>"lib","path"=>"core/");
 		Loader::$PATHS['Cache']	= array("type"=>"lib","path"=>"core/");
 		Loader::$PATHS['Item']	= array("type"=>"lib","path"=>"core/");
@@ -43,13 +46,16 @@ class Loader{
 			
 				case "root": // Zugriff von Root
 				case "default":
+					$file	= Loader::$PATHS[$cn]["path"].$cn.".php";
 						
 			}
 			
 			// Klasse laden
 			include_once $file;
 		}else{
-			echo "Klasse ".$cn." ist nicht registriert";
+			if(!include_once $cn.".php"){
+				echo "Klasse ".$cn." ist nicht registriert";
+			}
 		}
 		
 	}
