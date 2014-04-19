@@ -149,11 +149,12 @@ abstract class Controller{
 					}
 					break;
 					
-				case "mapping":	// Gemappte Daten integrieren
+				case "mapping":	// Gemappte Daten integrieren				
+					// Zugehörige Item-Klasse
+					$itemClass	= $this->itemClass;
+					
 					switch($step['action']){
-						case "db":// Daten aus der Datenbank					
-							// Zugehörige Item-Klasse
-							$itemClass	= $this->itemClass;
+						case "db":// Daten aus der Datenbank	
 							
 							// Daten laden und im Slot $step['ref'] speichern				
 							$db	= $this->config['db'][$step['ref']];	// Verkürzung (DB-Slot in der Konfig)
