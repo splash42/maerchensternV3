@@ -11,14 +11,4 @@ mod_gzip_on Yes
     AddOutputFilterByType DEFLATE application/javascript application/x-javascript
 </IfModule>
 
-RewriteEngine on
-# Redirect
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_URI} !.php
-RewriteCond %{REQUEST_URI} !(.*)/$
-RewriteRule ^(.*)$ /$1/ [L,R=301]
-
-# Rename
-RewriteCond %{QUERY_STRING} ^(.*)$ 
-RewriteRule ^(.*)/$ /?m=$1&%1
-RewriteRule ^(.*)/(.*).php$ /?m=$1&fn=$2&%1
+RewriteEngine off

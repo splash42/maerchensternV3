@@ -1,28 +1,47 @@
-{
-	"load":{
+{	
+	"structure":[
+		{"slot":"root","type":"tpl","action":"set","tpl":"root","comment":"Basis-TPL laden"},
+		{"slot":"root","type":"static","ref":"basic","comment":"Statische Werte für TPL in Basis-TPL integrieren"},
+		{"slot":"root","type":"tpl","action":"add","tpl":"list","target":"MAIN","comment":"Content-TPL setzen"},
+		{"slot":"items","type":"db","action":"loop","tpl":"listitem","ref":"items","comment":"Liste erstellen (DB-Zugriff)"},		
+		{"slot":"items","type":"static","ref":"internal_links","comment":"Link-Pfade setzen"},
+		{"slot":"root","type":"slot","action":"combine","ref":"items","target":"CONTENT"},
+		{"slot":"root","type":"static","ref":"final","comment":"Ändern auf global"}
+	],
+	"db":{
 		"items":{
-			"user":"read",
-			"type":"list",
-			"tab":"ms3_article",
-			"fields":"id,filename,title",
-			"limit":15
+			"query":{				
+				"user":"read",
+				"type":"list",
+				"tab":"ms3_article",
+				"fields":"*",
+				"limit":15,
+				"pagination":15
+			},
+			"mapping":{
+					"TITLE":"title",
+					"DESC":"desc",
+					"LINK":"filename",
+					"AUTHOR":"addition.autor",
+					"META":"addition.meta.desc"
+			}
+		}
+	},
+	"statics":{
+		"basic":{
+			"TITLE":"Willkommen auf dem Märchenstern"
+		},
+		"internal_links":{
+			"LINKPATH":"maerchen/",
+			"EXT":".php"
+		},
+		"final":{
+			"PATH":"//asset.maerchenstern.de"
 		}
 	},
 	"tpl":{
 		"root":{"mod":"_frame","file":"basic.tpl.htm"},
 		"list":{"mod":"_frame","file":"content.list.tpl.htm"},
 		"listitem":{"mod":"_frame","file":"content.list.item.tpl.htm"}
-	},
-	"statics":{
-		"basic":{
-			"TITLE":"Willkommen auf dem Märchenstern"
-		}
-	},
-	"structure":[
-		{"slot":"root","type":"tpl","action":"set","ref":"root"},
-		{"slot":"root","type":"static","ref":"basic"},
-		{"slot":"root","type":"tpl","action":"add","ref":"list","target":"MAIN"},
-		{"slot":"items","type":"tpl","action":"append","ref":"listitem","data":"items"},
-		{"slot":"root","type":"slot","action":"add","ref":"items","target":"CONTENT"}	
-	]
+	}
 }

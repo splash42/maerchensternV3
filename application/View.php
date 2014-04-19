@@ -149,7 +149,7 @@ class View{
 			
 			// Laden und in TPL-Puffer speichern
 			View::$TPL[$key]	= File::READ($fn,"str");
-		}		
+		}
 	}
 	
 	/** Füllt einen Puffer-Slot mit einem Template */
@@ -161,13 +161,58 @@ class View{
 	public static function ADD_TPL($slot,$tpl,$tag){
 		$s	= '/##'.$tag.'##/i';		
 		View::$BUFFER[$slot] = preg_replace($s,View::$TPL[$tpl],View::$BUFFER[$slot]);
-	}	
+	}
+	
+	/** Schleifenfunktion für mehrere gleichartige Einträge
+	 * @param str $slot - Puffer-Slot, der die Items sammeln soll
+	 * Info: Slot muss später in Haupt-Slot eingebaut werden!
+	 * @param str $tpl - Template zum formatieren der Einträge
+	 * @param array $items - Daten-Array mit den DB-Einträgen */
+	public static function APPEND_ITEMS($slot,$items,$tpl){
+		// Slot instanzieren
+		if(!View::$BUFFER[$slot]){
+			View::$BUFFER[$slot]	= '';
+		}
+		
+		foreach($items AS $item){
+			// Template füllen und an Slot anhängen			
+			View::$BUFFER[$slot] .= View::COMBINE(View::$TPL[$tpl],$item->tags);
+		}
+	}
 	
 	/** Ersetzt in einem Slot einen TAG durch einen Wert */
 	public static function ADD_TAG($slot,$tag,$value){
 		$s	= '/##'.$tag.'##/i';		
 		View::$BUFFER[$slot] = preg_replace($s,$value,View::$BUFFER[$slot]);
-	}	
+	}
+	
+	/** Ersetzt in einem Template ein oder mehrere Tags und gibt das Ergebnis zurück
+	 * @param str $slot - Slot, in dem die Tags ersetzt werden sollen
+	 * @param assoc $data ($tag => $value) - Daten, die in das Template integriert werden sollen */
+	public static function ADD_TAGS($slot,$data){		
+		foreach ($data AS $tag=>$value){
+			View::ADD_TAG($slot,$tag,$value);
+		}
+	}
+	
+	/** Kombiniert Templates mit Daten */
+	public static function COMBINE($tpl,$tags){		
+		foreach ($tags AS $tag => $value){
+			$s	= '/##'.$tag.'##/i';
+			$tpl	= preg_replace($s,$value,$tpl);
+		}
+		return $tpl;
+	}
+	
+	
+	/** Fügt zwei Slots zusammen
+	 * @param str $slot - Basis- bzw. Ziel-Slot
+	 * @param str $ref - Kind-Slot, der in den Zielslot eingebunden werden soll
+	 * @param str $tag - Name des Tags, in den der Kind-Slot eingebunden werden soll */
+	public static function COMBINE_SLOTS($slot,$ref,$tag){
+		$s	= '/##'.$tag.'##/i';
+		View::$BUFFER[$slot] = preg_replace($s,View::$BUFFER[$ref],View::$BUFFER[$slot]);
+	}
 	
 	/** Ersetzt evt. TAGs in den Dateinamen  */
 	private static function FORMAT_FILENAME(){

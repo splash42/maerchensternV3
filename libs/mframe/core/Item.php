@@ -4,101 +4,106 @@ class Item{
 	// Key der Datenbank-Tabelle
 	protected static $KEY	= "id";
 	
+	// Zwischenspeicher um Mehrfach-Request zu vermeiden und Daten zu mergen
+	protected static $BUFFER	= array();
+	
 	// Alle Persistenten Variablen
 	public $attr	= array();
 	
+	// TAG-Buffer
+	public $tags	= array();
+	
+	
+	
 	/** Liest die in der Config definierten Items aus der DB 
-	 * und übergibt sie an die entsprechende Funktion */
-	public static function LOAD_ITEMS($config){
-		foreach($config AS $key => $query){
-			$sql	= "SELECT ";
+	 * und übergibt sie an die entsprechende Funktion
+	 * @param assoc $query - Parameter für die DB-Abfrage
+	 * @param str arg[1] - Mapping-Daten der DB-Abfrage
+	 * @param assoc arg[2] - TAG-Name */
+	public static function LOAD_ITEMS($query){
+		
+		// Name der Kind-Klasse, die Item als extend nutzt
+		$class = get_called_class();
 			
-			// Felder
-			if(isset($query['fields'])){
-				$sql .= $query['fields'];
-			}else{
-				$sql .= "*";
-			}
-			
-			// Tabelle
-			$sql .= " FROM ".$query['tab'];
-			
-			// Bedingungen
-			
-			// Offset/Limit
-			
+		// Puffer-Slot
+		$slot	= 'root';
+		if(func_num_args()>1){
+			$slot	= func_get_arg(1);
+		}
+		
+		// Mapping auf TAG-Felder
+		$tags	= array();
+		if(func_num_args()>2){
+			$tags	= func_get_arg(2);
+		}
+		
+		// Request noch nicht im Puffer
+		if(!$class::$BUFFER[$slot]){
+			$db		= DBpdo::INIT();
 			
 			// Request
-			$db		= DBpdo::INIT();
-			$con	= $db->open();			
-			
-			// Statement
-			$stmt	= $con->prepare($sql);			
-			$stmt->execute();
-			
-			$class = get_called_class();
-			
-			$items	= array();
-			// Article-Datensätze verarbeiten
-			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-				$item	= new $class();
-				$item->setDbData($row);
-					
-				$items[$key][$row['id']]	= $item;
-			}
-			
-			return $items;
+			$class::$BUFFER[$slot]	= $db->jsonSelect($query,$class,$tags);
 		}
 	}
 	
-	/** Erzeugt DB-Querys aus Konfigdaten und läd die Daten in den Puffer */
-	public static function LOAD_DATA($mod,$config){
+	
+	/** Iteriert duch die Items in einem Buffer $slot
+	 * @param array $slot - Slot mit den zu iterierenden Items 
+	 * @param string $func - Funktion, die zum verarbeiten verwendet werden soll */
+	public static function PROCESS($slot,$func){
 		
-		foreach($config AS $key => $value){
-			switch($value['type']){
-				case "item":
-					
-					break;
-					
-				case "list":
-					
-					break;
-			}
-		}
-		
-		/*
-		foreach($config AS $key => $value){
-			switch($value['type']){
-				case "item":
-					$item;
-					if(isset(Request::GET("id"))){
-						$item	= new ucfirst($base).'Item'(Request::GET("id"));
-					}else{
-						if(isset(Request::GET("fn"))){
-							$item	= new ucfirst($base).'Item'(Request::GET("fn"));
-						}
+	}
+	
+	/** Fügt die DB-Daten den Item-Attributen hinzu
+	 * @param assoc $dbdata - Ass. Array mit den Daten, die dem Item hinzugefügt werden sollen */
+	public function setDbData($dbdata){
+		$this->attr	= array_merge($this->attr,$dbdata);
+	}
+	
+	/** Attributen auf TAG-Namen mappen */
+	public function mapTags($tags){
+		foreach ($tags AS $tag => $field){
+			$lvl	= explode(".",$field);
+			$num	= sizeof($lvl);
+			
+			if($num>1){	// JSON in DB-Feld
+				$tmp	= null;
+				for($i=0;$i<$num;$i++){
+					if($i==0){	// DB-Feld
+						$json	= $this->attr[$lvl[0]];
+						$tmp	= json_decode($json,true);
+					}else{		// JSON-Feld
+						$tmp	= $tmp[$lvl[$i]];
 					}
-					
-					break;
-					
-				case "list":
-					
-					break;
+				}
+				$this->tags[$tag]	= $tmp;
+			}else{	// Nur DB
+				$this->tags[$tag]	= $this->attr[$field];
 			}
+			
 		}
-		*/
 	}
 	
+	/** Mapping von DB-Werte entsprechend einer Konfigurationsdatei auf Template-Felder
+	 * @param assoc $mapping - Array mit den Mapping-Daten 
+	 * @return assoc $tags - Array mit den TAG-Namen als Key*/
+	public function map2tpl($mapping){
+		$tags	= array();
+		
+		return $tags;
+	}
+	
+	
+	/** Mapping von Eingabe-Werte entsprechend einer Konfigurationsdatei auf DB-Felder */
+	protected function map2db(){
+		
+	}
 	
 	/** INSERT/UPDATE: Speichert das Objekt. Falls das Objekt noch nicht existiert, 
 	 * wird es neu angelegt, ansonsten aktualisiert */
 	public function store(){
 		$db	= DBpdo::INIT();
 		$con	= $db->open();
-	}
-	
-	public function setDbData($dbdata){
-		$this->attr	= $dbdata;		
 	}
 	
 	/** INSERT: Fügt ein Item in der Datenbank ein, sofern es noch nicht 
@@ -110,17 +115,22 @@ class Item{
 	/** UPDATE: Aktualisiert ein bestehendes Item in der Datenbank */
 	public function update(){
 		
-	}	
+	}
 	
-	/** Mapping von DB-Werte entsprechend einer Konfigurationsdatei auf Template-Felder */
-	protected function map2tpl(){
+	/** Gibt einen definierte Buffer-Slot zurück */
+	public static function GET_BUFFER(){
+		$class = get_called_class();
+		
+		$slot	= 'root';
+		if(func_num_args()>0){
+			$slot	= func_get_arg(0);
+		}
+		return $class::$BUFFER[$slot];
 		
 	}
 	
-	
-	/** Mapping von Eingabe-Werte entsprechend einer Konfigurationsdatei auf DB-Felder */
-	protected function map2db(){
-		
+	public static function CLEAR_BUFFER($slot){
+		unset($class::$BUFFER[$slot]);
 	}
 }
 ?>

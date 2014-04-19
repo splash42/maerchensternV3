@@ -2,7 +2,11 @@
 /** Zentrale Routing-Klasse */
 class Core{
 	
-	// SINGLETON
+	// Konfig
+	public static $VERSION	= 1;
+	public static $STORAGE	= "pdo";
+	
+	// SINGLETON-Speicher
     public static $SINGLETON = null;
     
 	// Basispfade

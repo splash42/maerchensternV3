@@ -1,49 +1,18 @@
 {
+	"default":"maerchen",
 	"maerchen":{
-		"sequence":[
-			{"param":"t"},
-			{"param":"id","func":"detail"}
-		],
 		"tasks":{
-			"list":{
-				"function":"listItems",
-				"classes":{
-					"ArticleItem":["app","article/"]
-				},				
-				"config":"maerchen.list.json",
-				"cache":{
-					"mode":"all",
-					"filter":{
-						"mode":"include",
-						"params":["m,t"]
-					}
-				}
-			},
 			"az":{
-				"function":"azItems",
 				"classes":{
 					"ArticleItem":["app","article/"]
-				},
-				"cache":{
-					"mode":"all",
-					"filter":{
-						"mode":"include",
-						"params":["m,t"]
-					}
 				}
 			},
 			"detail":{
-				"function":"show",
-				"cache":{
-					"mode":"all",
-					"filter":[]
+				"classes":{
+					"ArticleItem":["app","article/"]
 				}
 			},
-			"new":{},
-			"edit":{},
-			"default":"list"
+			"default":"az"
 		}
-	},
-	"lexikon":{
 	}
 }

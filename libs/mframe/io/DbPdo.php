@@ -1,6 +1,6 @@
 <?
 /** DB-Zugriff mit PDO */
-class DBpdo{
+class DBpdo extends DB{
     private static $SINGLETON	= null;
 
 	// Zugangsdaten
@@ -45,6 +45,7 @@ class DBpdo{
 	/** Erstellt eine Verbindung */
 	public function open(){
 		$this->connection	= new PDO('mysql:host='.$this->host.';dbname='.$this->dbname,$this->user,$this->pass);
+		$this->connection->exec("SET CHARACTER SET utf8");
 		return $this->connection;
 	}
 	
@@ -197,6 +198,77 @@ class DBpdo{
 		
 		// Request
 		$statement->execute();
+	}
+	
+	
+	
+	
+	/** Erzeugt aus einem JSON-Objekt einen SQL-Request
+	 * @param array $query - Query-Informationen 
+	 * @param String func(1) - Name der Klasse für das Erzeugen der DB-Objekte
+	 * @return obj $item(s) - Datenobjekt(e) mit den Daten */
+	public function jsonSelect($query){
+		$class	= null;
+		if(func_num_args()>1){
+			$class	= func_get_arg(1);
+		}
+		$tags	= null;
+		if(func_num_args()>2){
+			$tags	= func_get_arg(2);
+		}
+		
+		// -- Abfrage erstellen -- 
+		$sql	= "SELECT ";
+		
+		// Felder
+		if(isset($query['fields'])){
+			$sql .= $query['fields'];
+		}else{
+			$sql .= "*";
+		}
+		
+		// Tabelle
+		$sql .= " FROM ".$query['tab'];
+		
+		
+		// Bedingungen
+		if(isset($query['conditions'])){
+			$sql	.= " WHERE ";
+			$sql 	.= $this->formatCondition($query['conditions']);
+		}
+		
+		// offset/limit
+		
+		// -- Request --
+		// Statement erstellen
+		$this->open();
+		$statement	= $this->connection->prepare($sql);
+		
+		// Request
+		$statement->execute();
+		
+		
+		// -- Daten auswerten --
+		if($query['type']=="item"){
+			$item	= new $class();
+			$row	= $statement->fetch(PDO::FETCH_ASSOC);
+			$item->setDbData($row);
+			$item->mapTags($tags);
+			
+			return $item;
+		}else{
+			$items	= array();
+			while($row	= $statement->fetch(PDO::FETCH_ASSOC)){
+				$item	= new $class();
+				$item->setDbData($row);
+				$item->mapTags($tags);
+				
+				$items[$row['id']]	= $item;		
+			}
+			return $items;
+		}
+		
+		
 	}
 	
 	

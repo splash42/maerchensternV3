@@ -1,0 +1,31 @@
+{	
+	"structure":[
+		{"slot":"root","type":"tpl","action":"set","tpl":"root"},
+		{"slot":"root","type":"static","ref":"basic"},
+		{"slot":"root","type":"tpl","action":"add","tpl":"az","target":"MAIN"},
+		{"slot":"root","type":"mapping","action":"db","ref":"items"},
+		{"slot":"root","type":"mapping","action":"func","ref":"setAz"}
+	],
+	"mapping":{
+		{"slot":"items","type":"mapping","action":"db","ref":"items","func":"setAz"}
+	},
+	"db":{
+		"items":{
+			"query":{
+				"user":"read",
+				"type":"list",
+				"tab":"ms3_article",
+				"fields":"*"		
+			}
+		}
+	},
+	"statics":{
+		"basic":{
+			"TITLE":"Willkommen auf dem Märchenstern"
+		}
+	},
+	"tpl":{
+		"root":{"mod":"_frame","file":"basic.tpl.htm"},
+		"az":{"mod":"article","file":"article.az.tpl.htm"}
+	}
+}

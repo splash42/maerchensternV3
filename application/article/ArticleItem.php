@@ -12,8 +12,6 @@ class ArticleItem extends Item{
 		// $sql	= "SELECT * FROM :tab WHERE type = ':type'";
 		$sql	= "SELECT * FROM ".ArticleItem::$TAB." WHERE type = :type";
 		
-		echo $sql." -- <br>";
-		
 		// Request
 		$db		= DBpdo::INIT();
 		$con	= $db->open();
@@ -44,6 +42,11 @@ class ArticleItem extends Item{
 			
 			echo "article";
 		}
+	}
+	
+	/** Ordnet die Daten in A-Z TAGs */
+	protected function setAz(){
+		
 	}
 }
 ?>

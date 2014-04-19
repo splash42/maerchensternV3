@@ -23,6 +23,7 @@ class Loader{
 		Loader::$PATHS['File']		= array("type"=>"lib","path"=>"io/");
 		Loader::$PATHS['Request']	= array("type"=>"lib","path"=>"io/");
 		Loader::$PATHS['DBpdo']		= array("type"=>"lib","path"=>"io/");
+		Loader::$PATHS['DB']		= array("type"=>"lib","path"=>"io/");
 		Loader::$PATHS['Url']		= array("type"=>"lib","path"=>"io/");
 		
 		// Lib::Tools
