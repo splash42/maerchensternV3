@@ -195,6 +195,12 @@ class View{
 		}
 	}
 	
+	/** Löscht alle noch nicht verwendeten TAGs im Puffer */
+	public static function CLEAR_TAGS($slot){
+		$s	= '/##.*##/i';
+		View::$BUFFER[$slot] = preg_replace($s,'',View::$BUFFER[$slot]);
+	}
+	
 	/** Kombiniert Templates mit Daten */
 	public static function COMBINE($tpl,$tags){		
 		foreach ($tags AS $tag => $value){

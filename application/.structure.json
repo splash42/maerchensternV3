@@ -12,6 +12,9 @@
 	"lexikon":{
 		"modul":"article"
 	},
+	"info":{
+		"modul":"article"
+	},
 	"katalog":{
 		"modul":"catalog"
 	},

@@ -6,7 +6,8 @@
 		{"slot":"items","type":"db","action":"loop","tpl":"listitem","ref":"items","comment":"Liste erstellen (DB-Zugriff)"},		
 		{"slot":"items","type":"static","ref":"internal_links","comment":"Link-Pfade setzen"},
 		{"slot":"root","type":"slot","action":"combine","ref":"items","target":"CONTENT"},
-		{"slot":"root","type":"static","ref":"final","comment":"Ändern auf global"}
+		{"slot":"root","type":"static","ref":"final"},
+		{"slot":"root","type":"static","action":"clear"}
 	],
 	"db":{
 		"items":{
@@ -15,13 +16,15 @@
 				"type":"list",
 				"tab":"ms3_article",
 				"fields":"*",
+				"conditions":"type != 'info'",
 				"limit":15,
 				"pagination":15
 			},
 			"mapping":{
 					"TITLE":"title",
-					"DESC":"desc",
+					"TEASER":"teaser",
 					"LINK":"filename",
+					"TYPE":"type",
 					"AUTHOR":"addition.autor",
 					"META":"addition.meta.desc"
 			}
@@ -32,11 +35,10 @@
 			"TITLE":"Willkommen auf dem Märchenstern"
 		},
 		"internal_links":{
-			"LINKPATH":"maerchen/",
 			"EXT":".php"
 		},
 		"final":{
-			"PATH":"//asset.maerchenstern.de"
+			"ASSETS":"assets.maerchenstern.de"
 		}
 	},
 	"tpl":{

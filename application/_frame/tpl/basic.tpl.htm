@@ -10,9 +10,18 @@
 		
 		<title>##TITLE##</title>
 		
-		<link href='//assets.maerchenstern.de/css/base.css' rel='stylesheet' type='text/css' media='screen' />		
-		
-		<script src="prio.js" type="text/javascript"></script>
+		<link href='//##ASSETS##/css/base.css' rel='stylesheet' type='text/css' media='screen' />	
+		<script>
+		/** HTML5 Bugfix für ältere Browser */
+		document.createElement('main');
+		document.createElement('header');
+		document.createElement('footer');
+		document.createElement('section');
+		document.createElement('nav');
+		document.createElement('aside');
+		document.createElement('figure');
+		document.createElement('figcaption');
+		</script>
 	</head>
 	<body>
 		<div id="frame">
@@ -26,7 +35,7 @@
 			
 			<!-- Kopf -->
 			<header>
-				<figure id="logo_img"><a href="/?n=logo"><img src="//assets.maerchenstern.de/img_layout/madel.png" alt="Logo" width="123" height="136" /></a></figure>
+				<figure id="logo_img"><a href="/?n=logo"><img src="//##ASSETS##/img_layout/madel.png" alt="Logo" width="123" height="136" /></a></figure>
 				<nav id="nav_main">
 					<a href="/?n=top">Startseite</a> | 
 					<a href="/maerchen/?n=top">Märchen lesen</a> | 
@@ -34,8 +43,8 @@
 					<a href="/lexikon/?n=top">Lexikon</a>
 				</nav>				
 				<figure id="claim">
-					<a href="/?n=claim"><img src="//assets.maerchenstern.de/img_layout/maerchenstern-maerchen-lesen-und-erleben.png" alt="Märchen lesen und erleben" width="268" height="50" /></a>
-					<figcaption id="">Märchen lesen und erleben</figcaption>
+					<a href="/?n=claim"><img src="//##ASSETS##/img_layout/maerchenstern-maerchen-lesen-und-erleben.png" alt="Märchen lesen und erleben" width="268" height="50" /></a>
+					<figcaption>Märchen lesen und erleben</figcaption>
 				</figure>
 			</header>
 			

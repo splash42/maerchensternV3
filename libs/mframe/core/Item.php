@@ -5,7 +5,7 @@ class Item{
 	protected static $KEY	= "id";
 	
 	// Zwischenspeicher um Mehrfach-Request zu vermeiden und Daten zu mergen
-	protected static $BUFFER	= array();
+	public static $BUFFER	= array();
 	
 	// Alle Persistenten Variablen
 	public $attr	= array();
@@ -44,14 +44,6 @@ class Item{
 			// Request
 			$class::$BUFFER[$slot]	= $db->jsonSelect($query,$class,$tags);
 		}
-	}
-	
-	
-	/** Iteriert duch die Items in einem Buffer $slot
-	 * @param array $slot - Slot mit den zu iterierenden Items 
-	 * @param string $func - Funktion, die zum verarbeiten verwendet werden soll */
-	public static function PROCESS($slot,$func){
-		
 	}
 	
 	/** Fügt die DB-Daten den Item-Attributen hinzu

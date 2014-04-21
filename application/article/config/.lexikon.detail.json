@@ -36,6 +36,6 @@
 	},
 	"tpl":{
 		"root":{"mod":"_frame","file":"basic.tpl.htm"},
-		"detail":{"mod":"article","file":"maerchen.detail.tpl.htm"}
+		"detail":{"mod":"article","file":"lexikon.detail.tpl.htm"}
 	}
 } 

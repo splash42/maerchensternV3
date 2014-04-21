@@ -21,6 +21,11 @@ class Core{
 	
 	// .structure.json	
 	public static $STRUCTURE;
+	
+	// Routing
+	public static $MOD	= null;
+	public static $TASK	= null;
+	
 
 
 	// -- AUSGABE -- 
@@ -69,6 +74,8 @@ class Core{
         if(Core::$SINGLETON==null){
             Core::$SINGLETON = new Core();
         }
+        
+        // print_r($_SERVER['QUERY_STRING']);
         return Core::$SINGLETON;
     } // -----------------------------------------
 

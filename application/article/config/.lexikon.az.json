@@ -19,16 +19,17 @@
 				"type":"list",
 				"tab":"ms3_article",
 				"fields":"title,filename,type",
-				"conditions":"type = 'maerchen'"
+				"conditions":"type = 'lexikon'"
 			}
 		}
 	},
 	"statics":{
 		"basic":{
-			"TITLE":"Willkommen auf dem Märchenstern"			
+			"TITLE":"Lexikon - Willkommen auf dem Märchenstern"	
+			
 		},
 		"content":{
-			"HEADLINE":"Märchen von A-Z"
+			"HEADLINE":"Wissenswertes von A-Z"
 		},
 		"final":{
 			"ASSETS":"assets.maerchenstern.de"

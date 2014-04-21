@@ -1,6 +1,10 @@
 {
 	"default":"maerchen",
 	"maerchen":{
+		"sequence":[
+			{"param":"t"},			
+			{"param":"fn","task":"detail"}
+		],
 		"tasks":{
 			"az":{
 				"classes":{
@@ -13,6 +17,39 @@
 				}
 			},
 			"default":"az"
+		}
+	},
+	"lexikon":{
+		"sequence":[
+			{"param":"t"},			
+			{"param":"fn","task":"detail"}
+		],
+		"tasks":{
+			"az":{
+				"classes":{
+					"ArticleItem":["app","article/"]
+				}
+			},
+			"detail":{
+				"classes":{
+					"ArticleItem":["app","article/"]
+				}
+			},
+			"default":"az"
+		}
+	},
+	"info":{
+		"sequence":[
+			{"param":"t"},			
+			{"param":"fn","task":"detail"}
+		],
+		"tasks":{
+			"detail":{
+				"classes":{
+					"ArticleItem":["app","article/"]
+				}
+			},
+			"default":"detail"
 		}
 	}
 }

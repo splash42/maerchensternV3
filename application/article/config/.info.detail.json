@@ -18,7 +18,7 @@
 			},
 			"mapping":{
 				"TITLE":"title",
-				"TEASER":"teaser",
+				"DESC":"desc",
 				"TXT":"txt",
 				"LINK":"filename",
 				"AUTHOR":"addition.autor",
