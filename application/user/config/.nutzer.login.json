@@ -1,0 +1,51 @@
+{	
+	"structure":[
+		{"slot":"root","type":"tpl","action":"set","tpl":"root"},
+		{"slot":"root","type":"static","ref":"basic"},
+		{"slot":"root","type":"tpl","action":"add","tpl":"detail","target":"MAIN"},
+		{"slot":"root","type":"formular","action":"add","ref":"login","target":"FORMULAR"},
+		{"slot":"root","type":"static","ref":"final"}
+	],
+	"db":{
+		"item":{
+			"query":{
+				"user":"read",
+				"type":"item",
+				"tab":"ms3_article",
+				"fields":"*",
+				"conditions":"filename = '<<url:fn>>'"			
+			},
+			"mapping":{
+				"TITLE":"title",
+				"DESC":"desc",
+				"TXT":"txt",
+				"LINK":"filename",
+				"AUTHOR":"addition.autor",
+				"META":"addition.meta.desc"
+			}
+		}
+	},
+	"statics":{
+		"basic":{
+			"TITLE":"Login - Willkommen auf dem Märchenstern"
+		},
+		"final":{
+			"ASSETS":"assets.maerchenstern.de"
+		}
+	},
+	"formular":{
+		"login":{
+			"action":"/nutzer/login.php",
+			"method":"POST",
+			"elements":[
+				{"type":"text","name":"user","label":"Nutzer","validate":["anum"]},
+				{"type":"password","name":"pass","label":"Passwort"},
+				{"type":"submit","name":"submit","value":"Einloggen"}
+			]
+		}
+	},
+	"tpl":{
+		"root":{"mod":"_frame","file":"basic.tpl.htm"},
+		"detail":{"mod":"user","file":"nutzer.login.tpl.htm"}
+	}
+} 

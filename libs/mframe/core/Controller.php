@@ -19,7 +19,6 @@ abstract class Controller{
 		$file		= Core::$APP.$queue['mod_base']."/config/.structure.json";
 		$structure	= File::READ($file,"json");
 		
-		
 		// Modul auswählten (Default-Modul)
 		if($queue['mod']=="default"){
 			$queue['mod']	= $structure[$queue['mod']];
@@ -61,7 +60,7 @@ abstract class Controller{
 			
 			// 8 - (show) Ausgabe
 			View::SHOW();
-		}else{ Log::SET_ERROR('Fehler: Struktur für Modul '.$modul.' konnte nicht geöffnet werden!'); }
+		}else{ Log::SET_ERROR('Fehler: Struktur für Modul "'.$modul.'" konnte nicht geöffnet werden!'); }
 		
 	}
 	
@@ -73,8 +72,8 @@ abstract class Controller{
 	/** Komponiert aus den Einzelelementen die fertige Website
 	 * @param array $structure - Prozessschritte zur Erstellung des Outputs */
 	private function build(){
-		
 		foreach ($this->config['structure'] AS $step){
+			
 			switch($step['type']){
 				case "tpl":	// Template hinzufügen
 					switch($step['action']){
@@ -147,10 +146,17 @@ abstract class Controller{
 					}					
 					break;
 					
+				case "formular":
+					$form	= new Form();
+					$code = $form->generate($this->config['formular'][$step['ref']]);
+					
+					View::ADD_TAG($step['slot'],$step['target'],$code);
+					break;
+					
 				case "slot":
 					switch($step['action']){
 						case "combine":
-							VIEW::COMBINE_SLOTS($step['slot'],$step['ref'],$step['target']);
+							View::COMBINE_SLOTS($step['slot'],$step['ref'],$step['target']);
 							break;
 					}
 					break;

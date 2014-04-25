@@ -243,7 +243,7 @@ class DBpdo extends DB{
 		// Statement erstellen
 		$this->open();
 		$statement	= $this->connection->prepare($sql);
-		
+				
 		// Request
 		$statement->execute();
 		
@@ -263,7 +263,12 @@ class DBpdo extends DB{
 				$item->setDbData($row);
 				$item->mapTags($tags);
 				
-				$items[$row['id']]	= $item;		
+				if($row['id']){
+					$items[$row['id']]	= $item;
+				}else{
+					array_push($items,$item);
+				}
+						
 			}
 			return $items;
 		}

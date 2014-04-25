@@ -14,10 +14,10 @@ class Loader{
 		Loader::$PATHS['View']	= array("type"=>"root","path"=>"/");
 		
 		// Lib:Core
-		Loader::$PATHS['Log']	= array("type"=>"lib","path"=>"core/");
-		Loader::$PATHS['Cache']	= array("type"=>"lib","path"=>"core/");
-		Loader::$PATHS['Item']	= array("type"=>"lib","path"=>"core/");
-		Loader::$PATHS['Controller']	= array("type"=>"lib","path"=>"core/");
+		Loader::$PATHS['Log']		= array("type"=>"lib","path"=>"core/");
+		Loader::$PATHS['Cache']		= array("type"=>"lib","path"=>"core/");
+		Loader::$PATHS['Item']		= array("type"=>"lib","path"=>"core/");
+		Loader::$PATHS['Controller']= array("type"=>"lib","path"=>"core/");
 		
 		// Lib:IO
 		Loader::$PATHS['File']		= array("type"=>"lib","path"=>"io/");
@@ -27,8 +27,9 @@ class Loader{
 		Loader::$PATHS['Url']		= array("type"=>"lib","path"=>"io/");
 		
 		// Lib::Tools
-		Loader::$PATHS['Time']	= array("type"=>"lib","path"=>"tools/");
+		Loader::$PATHS['Time']		= array("type"=>"lib","path"=>"tools/");
 		Loader::$PATHS['Validator']	= array("type"=>"lib","path"=>"tools/");
+		Loader::$PATHS['Form']		= array("type"=>"lib","path"=>"tools/");
 		
 	} // ENDE: INIT_VARS
 	

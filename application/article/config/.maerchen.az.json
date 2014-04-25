@@ -31,6 +31,7 @@
 			"HEADLINE":"Märchen von A-Z"
 		},
 		"final":{
+			"BASE":"labs.maerchenstern.de",
 			"ASSETS":"assets.maerchenstern.de"
 		}
 	},

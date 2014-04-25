@@ -1,0 +1,16 @@
+{
+	"default":"maerchen",
+	"suche":{
+		"sequence":[
+			{"param":"t"}
+		],
+		"tasks":{
+			"index":{
+				"classes":{
+					"SearchItem":["app","search/"]
+				}
+			},
+			"default":"index"
+		}
+	}
+}

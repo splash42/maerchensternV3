@@ -1,0 +1,22 @@
+{
+	"default":"nutzer",
+	"nutzer":{
+		"sequence":[
+			{"param":"t"},			
+			{"param":"fn","task":"login"}
+		],
+		"tasks":{
+			"login":{
+				"classes":{
+					"UserItem":["app","user/"]
+				}
+			},
+			"list":{
+				"classes":{
+					"UserItem":["app","user/"]
+				}
+			},
+			"default":"login"
+		}
+	}
+}

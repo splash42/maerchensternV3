@@ -1,0 +1,22 @@
+{	
+	"structure":[
+		{"slot":"root","type":"tpl","action":"set","tpl":"root"},
+		{"slot":"root","type":"static","ref":"basic"},
+		{"slot":"root","type":"tpl","action":"add","tpl":"content","target":"MAIN"},
+		{"slot":"root","type":"static","ref":"final"},
+		{"slot":"root","type":"static","action":"clear"}
+	],
+	"statics":{
+		"basic":{
+			"TITLE":"Suchen auf dem Märchenstern"
+		},
+		"final":{
+			"BASE":"labs.maerchenstern.de",
+			"ASSETS":"assets.maerchenstern.de"
+		}
+	},
+	"tpl":{
+		"root":{"mod":"_frame","file":"basic.tpl.htm"},
+		"content":{"mod":"search","file":"suche.index.tpl.htm"}
+	}
+} 
